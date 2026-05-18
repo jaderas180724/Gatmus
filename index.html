@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProSuite — Verificador BIN, Pasarelas, Correos & 12 Herramientas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',system-ui,sans-serif; }
+        body { background:#0a0d14; color:#e0e4ea; min-height:100vh; }
+        header {
+            background:linear-gradient(135deg,#0f141f,#1a2332);
+            border-bottom:1px solid #1f2a3a;
+            padding:16px 24px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:12px;
+        }
+        .logo { display:flex; align-items:center; gap:10px; }
+        .logo i { color:#00d4aa; font-size:26px; }
+        .logo h1 { font-size:20px; font-weight:700; }
+        .logo span { color:#00d4aa; }
+        .badge {
+            background:#141c2a; border:1px solid #1f2a3a;
+            border-radius:16px; padding:4px 14px; font-size:12px;
+            display:flex; align-items:center; gap:6px; color:#8ba0c4;
+        }
+        .container { max-width:1400px; margin:0 auto; padding:16px 20px; }
+        .stats-row {
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+            gap:10px; margin-bottom:20px;
+        }
+        .stat-box {
+            background:#0f141f; border:1px solid #1f2a3a; border-radius:10px;
+            padding:12px; text-align:center;
+        }
+        .stat-box .num { font-size:22px; font-weight:700; }
+        .stat-box .lbl { font-size:11px; color:#6b7d9e; margin-top:4px; }
+        .stat-box.green .num { color:#00d4aa; }
+        .stat-box.blue .num { color:#5b9cf5; }
+        .stat-box.yellow .num { color:#f7b731; }
+        .stat-box.purple .num { color:#b47bf5; }
+        .section-title {
+            font-size:16px; font-weight:600; margin:20px 0 12px;
+            display:flex; align-items:center; gap:8px;
+        }
+        .section-title i { color:#00d4aa; }
+        .section-title .count { color:#6b7d9e; font-size:12px; font-weight:400; margin-left:8px; }
+        .filter-row {
+            display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;
+        }
+        .filter-btn {
+            background:#141c2a; border:1px solid #1f2a3a; border-radius:8px;
+            padding:6px 14px; color:#8ba0c4; cursor:pointer; font-size:12px;
+            transition:0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active { background:#1f2a3a; color:#fff; border-color:#00d4aa; }
+        .tools-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+            gap:10px; margin-bottom:20px;
+        }
+        .tool-card {
+            background:#0f141f; border:1px solid #1f2a3a; border-radius:10px;
+            padding:14px; transition:0.2s; cursor:pointer;
+        }
+        .tool-card:hover { border-color:#2a3d5a; }
+        .tool-card .top {
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
+        }
+        .tool-card .top .name { font-weight:600; font-size:13px; }
+        .tool-card .top .tag {
+            font-size:10px; padding:2px 8px; border-radius:10px;
+            background:#1c2a3f; color:#8ba0c4;
+        }
+        .tool-card .top .tag.free { background:#00d4aa22; color:#00d4aa; }
+        .tool-card .top .tag.diamond { background:#b47bf522; color:#b47bf5; }
+        .tool-card .desc { font-size:12px; color:#6b7d9e; margin-bottom:6px; }
+        .tool-card .cmd { font-size:11px; color:#4a5d7e; font-family:monospace; }
+        .gate-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+            gap:10px; margin-bottom:20px;
+        }
+        .gate-card {
+            background:#0f141f; border:1px solid #1f2a3a; border-radius:10px;
+            padding:14px; position:relative;
+        }
+        .gate-card .gate-name { font-weight:600; font-size:13px; }
+        .gate-card .gate-type {
+            font-size:10px; padding:2px 8px; border-radius:8px;
+            display:inline-block; margin:4px 0;
+        }
+        .gate-card .gate-type.stripe { background:#5b9cf522; color:#5b9cf5; }
+        .gate-card .gate-type.shopify { background:#00d4aa22; color:#00d4aa; }
+        .gate-card .gate-type.braintree { background:#f7b73122; color:#f7b731; }
+        .gate-card .gate-mode { font-size:11px; color:#6b7d9e; }
+        .gate-card .gate-tier {
+            position:absolute; top:8px; right:8px;
+            font-size:10px; padding:2px 8px; border-radius:8px;
+        }
+        .gate-card .gate-tier.free { background:#00d4aa22; color:#00d4aa; }
+        .gate-card .gate-tier.platinum { background:#5b9cf522; color:#5b9cf5; }
+        .gate-card .gate-tier.diamond { background:#b47bf522; color:#b47bf5; }
+        .gate-card .gate-meta { font-size:11px; color:#4a5d7e; margin-top:6px; }
+        .workspace {
+            background:#0f141f; border:1px solid #1f2a3a; border-radius:12px;
+            padding:20px; margin-bottom:20px; min-height:200px;
+        }
+        .workspace .ws-header {
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
+        }
+        .workspace .ws-header h3 { font-size:15px; display:flex; align-items:center; gap:8px; }
+        .workspace .ws-header h3 i { color:#00d4aa; }
+        .ws-input-row {
+            display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;
+        }
+        .ws-input-row input, .ws-input-row select {
+            background:#0a0d14; border:1px solid #1f2a3a; border-radius:8px;
+            padding:8px 14px; color:#e0e4ea; font-size:13px; flex:1; min-width:180px;
+        }
+        .ws-input-row input:focus { outline:none; border-color:#00d4aa; }
+        .ws-input-row button {
+            background:#00d4aa; border:none; border-radius:8px; padding:8px 20px;
+            color:#0a0d14; font-weight:600; cursor:pointer; transition:0.2s;
+        }
+        .ws-input-row button:hover { background:#00bf98; }
+        .ws-input-row button.secondary {
+            background:#141c2a; border:1px solid #1f2a3a; color:#8ba0c4;
+        }
+        .ws-result {
+            background:#0a0d14; border:1px solid #1f2a3a; border-radius:8px;
+            padding:16px; font-size:13px; line-height:1.7; min-height:80px;
+            white-space:pre-wrap; font-family:monospace;
+        }
+        .tabs {
+            display:flex; gap:4px; margin-bottom:14px; flex-wrap:wrap;
+        }
+        .tab {
+            background:#141c2a; border:1px solid #1f2a3a; border-radius:8px 8px 0 0;
+            padding:8px 16px; color:#6b7d9e; cursor:pointer; font-size:12px;
+            border-bottom:none; transition:0.2s;
+        }
+        .tab:hover, .tab.active { background:#0f141f; color:#e0e4ea; }
+        .hidden { display:none !important; }
+        .loading-spinner {
+            display:inline-block; width:14px; height:14px;
+            border:2px solid #1f2a3a; border-top:2px solid #00d4aa;
+            border-radius:50%; animation:spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        .toast {
+            position:fixed; bottom:20px; right:20px;
+            background:#141c2a; border:1px solid #1f2a3a; border-radius:10px;
+            padding:12px 20px; font-size:13px; display:none; z-index:999;
+            box-shadow:0 8px 32px rgba(0,0,0,0.6);
+        }
+        .toast.show { display:block; animation:fadeIn 0.3s; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        footer { text-align:center; padding:20px; font-size:12px; color:#4a5d7e; border-top:1px solid #1a2332; }
+        a { color:#5b9cf5; text-decoration:none; }
+        a:hover { text-decoration:underline; }
+        @media(max-width:768px) {
+            .tools-grid { grid-template-columns:1fr 1fr; }
+            .gate-grid { grid-template-columns:1fr 1fr; }
+        }
+        /* Feed events */
+        .feed-list { max-height:300px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#1f2a3a transparent; }
+        .feed-list::-webkit-scrollbar { width:5px; }
+        .feed-list::-webkit-scrollbar-thumb { background:#1f2a3a; border-radius:4px; }
+        .feed-entry {
+            display:flex; gap:12px; padding:10px 0; border-bottom:1px solid #1a2332;
+        }
+        .feed-entry:last-child { border:none; }
+        .feed-entry .icon-circle {
+            width:32px; height:32px; border-radius:50%; background:#1c2a3f;
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
+        }
+        .feed-entry .icon-circle.new { background:#00d4aa22; color:#00d4aa; }
+        .feed-entry .icon-circle.down { background:#f7525b22; color:#f7525b; }
+        .feed-entry .icon-circle.info { background:#5b9cf522; color:#5b9cf5; }
+        .feed-entry .feed-text { font-size:13px; line-height:1.5; }
+        .feed-entry .feed-time { font-size:11px; color:#4a5d7e; }
+        /* BIN feed */
+        .bin-feed { max-height:320px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#1f2a3a transparent; }
+        .bin-feed::-webkit-scrollbar { width:5px; }
+        .bin-feed::-webkit-scrollbar-thumb { background:#1f2a3a; border-radius:4px; }
+        .bin-item {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:10px 12px; border-bottom:1px solid #1a2332; transition:background 0.2s; cursor:default;
+        }
+        .bin-item:hover { background:#0d141e; }
+        .bin-item .bin-number { font-family:'Fira Code',monospace; font-weight:600; color:#b8c8e0; }
+        .bin-item .bin-meta { font-size:12px; color:#6b7d9e; display:flex; gap:12px; }
+        .bin-item .bin-actions { display:flex; gap:8px; }
+        .bin-item .bin-actions button {
+            background:none; border:1px solid #2a3346; color:#8ba0c4;
+            padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer; transition:0.2s;
+        }
+        .bin-item .bin-actions button:hover { background:#1f2939; color:#fff; }
+        .email-display-box {
+            background:#0a0d14; border:1px solid #1f2a3a; border-radius:8px;
+            padding:12px 16px; margin-bottom:12px; font-family:monospace; font-size:13px;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .inbox-list { max-height:220px; overflow-y:auto; }
+        .inbox-item {
+            background:#0a0d14; border-radius:8px; padding:12px; margin-bottom:8px;
+            border-left:3px solid #00d4aa;
+        }
+        .inbox-item .from { font-weight:600; font-size:13px; }
+        .inbox-item .subject { color:#8ba0c4; font-size:13px; }
+        .inbox-item .time { font-size:11px; color:#4a5d7e; float:right; }
+        .status-service {
+            display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;
+        }
+        .status-svc {
+            background:#0a0d14; border-radius:8px; padding:14px; text-align:center;
+        }
+        .status-svc .svc-name { font-size:12px; color:#6b7d9e; }
+        .status-svc .svc-status { font-size:16px; font-weight:700; }
+        .status-svc .svc-status.online { color:#00d4aa; }
+        .status-svc .svc-status.offline { color:#f7525b; }
+        .status-svc .svc-status.warning { color:#f7b731; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <i class="fas fa-cube"></i>
+        <h1>Pro<span>Suite</span></h1>
+        <span class="badge"><i class="fas fa-shield"></i> Pentest — Autorizado</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <span class="badge"><i class="fas fa-wifi"></i> <span id="statusText">En línea</span></span>
+        <span class="badge"><i class="fas fa-tag"></i> v2.1</span>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- STATS ROW -->
+    <div class="stats-row">
+        <div class="stat-box green"><div class="num">12</div><div class="lbl">Herramientas</div></div>
+        <div class="stat-box blue"><div class="num">20</div><div class="lbl">Payment Gateways</div></div>
+        <div class="stat-box yellow"><div class="num">6</div><div class="lbl">Gratuitas</div></div>
+        <div class="stat-box purple"><div class="num">6</div><div class="lbl">Diamond</div></div>
+    </div>
+
+    <!-- ========== BIN CHECKER + VERIFICADOR ========== -->
+    <div class="section-title">
+        <i class="fas fa-search"></i> Verificador y Validador BIN
+        <span class="count">(consulta en tiempo real contra binlist.net)</span>
+    </div>
+    <div class="ws-input-row">
+        <input type="text" id="binCheckInput" placeholder="BIN de 6-8 dígitos (ej: 45717360)" maxlength="8" />
+        <button id="binCheckBtn"><i class="fas fa-arrow-right"></i> Verificar BIN</button>
+    </div>
+    <div class="ws-result" id="binCheckResult" style="margin-bottom:14px;">
+        <span style="color:#4a5d7e;">Ingresa un BIN para consultar. Muestra: red (Visa/MC), tipo, pa&iacute;s, banco, tel&eacute;fono, web, prepago, validaci&oacute;n Luhn. L&iacute;mite: 5/h gratis.</span>
+    </div>
+
+    <!-- ========== ÚLTIMOS BINS DEL MUNDO ========== -->
+    <div class="section-title">
+        <i class="fas fa-globe"></i> Últimos BINs del Mundo
+        <span class="count">(fuentes: Telegram @binsgrams @binsflix @daily_bins + GitHub)</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:12px;color:#6b7d9e;"><i class="fas fa-circle-info"></i> Estado: <span class="badge" style="background:#00d4aa22;color:#00d4aa;">live</span> <span class="badge" style="background:#5b9cf522;color:#5b9cf5;">tested</span> <span class="badge" style="background:#b47bf522;color:#b47bf5;">verified</span></span>
+        <button class="filter-btn" id="refreshBinsBtn"><i class="fas fa-rotate"></i> Refrescar lista</button>
+    </div>
+    <div class="bin-feed" id="binsWorldFeed">
+        <div class="text-center" style="color:#4a5d7e;padding:20px;"><span class="loading-spinner"></span> Cargando lista de BINs frescos...</div>
+    </div>
+
+    <!-- ========== MONITOREO DE SERVICIOS ========== -->
+    <div class="section-title">
+        <i class="fas fa-heart-pulse"></i> Monitoreo de Servicios
+        <span class="count">(se actualiza cada 60s)</span>
+    </div>
+    <div class="status-service" id="statusServices">
+        <div class="status-svc"><div class="svc-name">binlist.net (API lookup)</div><div class="svc-status" id="svcBinlist"><span class="loading-spinner"></span></div></div>
+        <div class="status-svc"><div class="svc-name">binlist.io (base open-source)</div><div class="svc-status" id="svcBinlistIo"><span class="loading-spinner"></span></div></div>
+        <div class="status-svc"><div class="svc-name">api.mail.tm (correos temporales)</div><div class="svc-status" id="svcMailTm"><span class="loading-spinner"></span></div></div>
+        <div class="status-svc"><div class="svc-name">Telegram BINs (canales)</div><div class="svc-status" id="svcTelegram"><span class="loading-spinner"></span></div></div>
+    </div>
+
+    <!-- ========== PAYMENT GATEWAYS ========== -->
+    <div class="section-title">
+        <i class="fas fa-credit-card"></i> Payment Gateways <span class="count">(20 activas)</span>
+    </div>
+    <div class="filter-row" id="gateFilters">
+        <button class="filter-btn active" data-filter="all">TODOS (20)</button>
+        <button class="filter-btn" data-filter="free">GRATUITO (2)</button>
+        <button class="filter-btn" data-filter="platinum">PLATINUM (6)</button><button class="filter-btn" data-filter="diamond">DIAMOND (12)</button>
+    </div>
+    <div class="gate-grid" id="gateGrid"></div>
+
+    <!-- ========== 12 HERRAMIENTAS ========== -->
+    <div class="section-title">
+        <i class="fas fa-toolbox"></i> Herramientas <span class="count">(12 disponibles)</span>
+    </div>
+    <div class="filter-row" id="toolFilters">
+        <button class="filter-btn active" data-filter="all">TODOS (12)</button>
+        <button class="filter-btn" data-filter="free">GRATUITO (6)</button>
+        <button class="filter-btn" data-filter="platinum">PLATINUM (0)</button>
+        <button class="filter-btn" data-filter="diamond">DIAMOND (6)</button>
+    </div>
+    <div class="tools-grid" id="toolsGrid"></div>
+
+    <!-- ========== WORKSPACE CENTRAL ========== -->
+    <div class="section-title"><i class="fas fa-terminal"></i> Workspace</div>
+    <div class="workspace" id="workspace">
+        <div class="ws-header">
+            <h3><i class="fas fa-bolt"></i> <span id="wsTitle">Consola de herramientas</span></h3>
+            <button class="filter-btn" id="clearWsBtn"><i class="fas fa-eraser"></i> Limpiar</button>
+        </div>
+        <div class="tabs" id="wsTabs">
+            <button class="tab active" data-tab="checker">Checker</button>
+            <button class="tab" data-tab="generator">Generador</button>
+            <button class="tab" data-tab="gateway">Gateway Tester</button>
+            <button class="tab" data-tab="hunter">Hunter</button>
+            <button class="tab" data-tab="mail">Temp Mail</button>
+            <button class="tab" data-tab="curl">cURL Conv</button>
+        </div>
+        
+        <!-- TAB CHECKER -->
+        <div class="tab-content" data-tab="checker">
+            <div class="ws-input-row">
+                <input type="text" id="checkerInput" placeholder="BIN, email, IP, IBAN..." />
+                <select id="checkerType">
+                    <option value="bin">BIN Lookup</option>
+                    <option value="ip">IP Lookup</option>
+                    <option value="iban">IBAN Validator</option>
+                    <option value="combo">ComboHunter</option>
+                </select>
+                <button id="checkerBtn"><i class="fas fa-search"></i> Consultar</button>
+            </div>
+            <div class="ws-result" id="checkerResult">Esperando consulta...</div>
+        </div>
+        
+        <!-- TAB GENERADOR -->
+        <div class="tab-content hidden" data-tab="generator">
+            <div class="ws-input-row">
+                <select id="genType">
+                    <option value="cc">Generador CC (Luhn válidas)</option>
+                    <option value="extrapolate">Extrapolador (tarjetas similares)</option>
+                    <option value="address">Fake Address / Identidad</option>
+                    <option value="iban">IBAN Gen (DE)</option>
+                </select>
+                <input type="text" id="genInput" placeholder="BIN para extrapolar o generar" />
+                <button id="genBtn"><i class="fas fa-wand-magic"></i> Generar</button>
+            </div>
+            <div class="ws-result" id="genResult">Presiona "Generar" para obtener datos...</div>
+        </div>
+        
+        <!-- TAB GATEWAY -->
+        <div class="tab-content hidden" data-tab="gateway">
+            <div class="ws-input-row">
+                <select id="gateSelect">
+                    <option value="stripe">Stripe Auth (Gratis)</option>
+                    <option value="shopify">Shopify Auth (Gratis)</option>
+                    <option value="braintree">Braintree Auth (Platinum)</option>
+                    <option value="stripe_charge">Stripe Charge $1 (Platinum)</option>
+                    <option value="shopify_charge">Shopify Charge $10 (Platinum)</option>
+                    <option value="custom">Custom Gate (Diamond)</option>
+                </select>
+                <input type="text" id="gateCardInput" placeholder="Número de tarjeta (BIN+resto)" />
+                <button id="gateBtn"><i class="fas fa-play"></i> Probar pasarela</button>
+            </div>
+            <div class="ws-result" id="gateResult">Selecciona una gateway y proporciona un BIN para simular la prueba...</div>
+        </div>
+        
+        <!-- TAB HUNTER -->
+        <div class="tab-content hidden" data-tab="hunter">
+            <div class="ws-input-row">
+                <input type="text" id="hunterInput" placeholder="URL de tienda o pasarela" />
+                <select id="hunterType">
+                    <option value="sites">Site Hunter (localizar tiendas)</option>
+                    <option value="scan">Site Scanner (escanear pasarelas)</option>
+                    <option value="auto">AutoHunter (OSINT multi-pasarela)</option>
+                </select>
+                <button id="hunterBtn"><i class="fas fa-crosshairs"></i> Ejecutar</button>
+            </div>
+            <div class="ws-result" id="hunterResult">Listo para rastrear...</div>
+        </div>
+        
+        <!-- TAB TEMP MAIL -->
+        <div class="tab-content hidden" data-tab="mail">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                <button id="mailCreateBtn" style="background:#00d4aa;border:none;border-radius:8px;padding:8px 20px;color:#0a0d14;font-weight:600;cursor:pointer;">
+                    <i class="fas fa-plus"></i> Generar correo temporal
+                </button>
+                <button id="mailRefreshBtn" style="background:#141c2a;border:1px solid #1f2a3a;border-radius:8px;padding:8px 20px;color:#8ba0c4;cursor:pointer;">
+                    <i class="fas fa-rotate"></i> Revisar bandeja
+                </button>
+                <button id="mailCopyBtn" style="background:#141c2a;border:1px solid #1f2a3a;border-radius:8px;padding:8px 20px;color:#8ba0c4;cursor:pointer;">
+                    <i class="fas fa-copy"></i> Copiar dirección
+                </button>
+            </div>
+            <div class="email-display-box" id="mailDisplay">
+                <span id="emailAddress" style="color:#4a5d7e;">— Sin correo generado —</span>
+                <button style="background:none;border:none;color:#00d4aa;cursor:pointer;font-size:16px;" id="copyEmailInner"><i class="fas fa-copy"></i></button>
+            </div>
+            <div style="font-size:12px;color:#6b7d9e;margin-bottom:8px;"><i class="fas fa-inbox"></i> Bandeja de entrada:</div>
+            <div class="ws-result" id="mailInbox" style="min-height:80px;">Genera un correo para empezar...</div>
+        </div>
+        
+        <!-- TAB CURL -->
+        <div class="tab-content hidden" data-tab="curl">
+            <div class="ws-input-row">
+                <input type="text" id="curlInput" placeholder="Pega un comando cURL aquí..." style="flex:2;" />
+                <button id="curlBtn"><i class="fas fa-code"></i> Convertir a Python aiohttp</button>
+            </div>
+            <div class="ws-result" id="curlResult">Pega un comando cURL y presiona Convertir...</div>
+        </div>
+    </div>
+
+    <!-- ========== FEED DE EVENTOS Y ALERTAS ========== -->
+    <div class="section-title">
+        <i class="fas fa-rss"></i> Feed de Eventos y Alertas
+        <span class="count">(registro cronológico)</span>
+        <button class="filter-btn" id="clearFeedBtn" style="margin-left:auto;"><i class="fas fa-trash"></i> Limpiar</button>
+    </div>
+    <div style="background:#0f141f;border:1px solid #1f2a3a;border-radius:10px;padding:14px;margin-bottom:20px;">
+        <div class="feed-list" id="feedList">
+            <div class="text-center" style="color:#4a5d7e;padding:20px;">Esperando eventos...</div>
+        </div>
+    </div>
+
+    <!-- ========== RECURSOS DE INTERÉS ========== -->
+    <div class="section-title"><i class="fas fa-link"></i> Recursos de Interés</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;">
+        <div style="background:#0f141f;border:1px solid #1f2a3a;border-radius:10px;padding:14px;">
+            <strong style="color:#b8c8e0;">🔍 Bases de datos BIN</strong>
+            <div style="font-size:12px;margin-top:6px;line-height:2;">
+                <a href="https://binlist.net" target="_blank">binlist.net (API)</a><br/>
+                <a href="https://binlist.io" target="_blank">binlist.io (CSV open-source)</a><br/>
+                <a href="https://github.com/venelinkochev/bin-list-data" target="_blank">GitHub: bin-list-data</a><br/>
+                <a href="https://github.com/iannuttall/binlist-data" target="_blank">GitHub: binlist-data</a>
+            </div>
+        </div>
+        <div style="background:#0f141f;border:1px solid #1f2a3a;border-radius:10px;padding:14px;">
+            <strong style="color:#b8c8e0;">📧 Correo Temporal</strong>
+            <div style="font-size:12px;margin-top:6px;line-height:2;">
+                <a href="https://docs.mail.tm" target="_blank">Mail.tm API Docs</a><br/>
+                <a href="https://api.mail.tm/domains" target="_blank">Ver dominios disponibles</a><br/>
+                <a href="https://catchmail.io" target="_blank">Catchmail.io (alternativa)</a>
+            </div>
+        </div>
+        <div style="background:#0f141f;border:1px solid #1f2a3a;border-radius:10px;padding:14px;">
+            <strong style="color:#b8c8e0;">🌐 IP Geolocation</strong>
+            <div style="font-size:12px;margin-top:6px;line-height:2;">
+                <a href="https://ip-api.com" target="_blank">ip-api.com (gratis, 45/min)</a><br/>
+                <a href="http://ip-api.com/json/8.8.8.8" target="_blank">Ejemplo: 8.8.8.8</a>
+            </div>
+        </div>
+        <div style="background:#0f141f;border:1px solid #1f2a3a;border-radius:10px;padding:14px;">
+            <strong style="color:#b8c8e0;">📡 Canales Telegram BINs</strong>
+            <div style="font-size:12px;margin-top:6px;line-height:2;">
+                <a href="https://t.me/binsgrams" target="_blank">@binsgrams</a><br/>
+                <a href="https://t.me/binsflix" target="_blank">@binsflix</a><br/>
+                <a href="https://telegramian.com/list/bins/" target="_blank">Directorio Telegramian</a>
+            </div>
+        </div>
+        <div style="background:#0f141f;border:1px solid #1f2a3a;border-radius:10px;padding:14px;">
+            <strong style="color:#b8c8e0;">🛡️ Utilidades OSINT</strong>
+            <div style="font-size:12px;margin-top:6px;line-height:2;">
+                <a href="https://debounce.com/free-disposable-check-api/" target="_blank">DeBounce (email desechable)</a><br/>
+                <a href="https://publicapis.io/binlist-api" target="_blank">Binlist API docs</a>
+            </div>
+        </div>
+        <div style="background:#0f141f;border:1px solid #1f2a3a;border-radius:10px;padding:14px;">
+            <strong style="color:#b8c8e0;">⚡ Generadores</strong>
+            <div style="font-size:12px;margin-top:6px;line-height:2;">
+                <a href="https://www.iban.com/structure" target="_blank">IBAN estructura</a><br/>
+                <a href="https://generatedata.com" target="_blank">GenerateData (identidades)</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    ProSuite v2.1 — Herramienta de pentest autorizada | <span id="footerTime"></span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== DATA ======
+const TOOLS = [
+    { id:'gen', name:'Generador CC', cmd:'/GEN', desc:'Genera tarjetas Luhn v\u00e1lidas', tier:'free', icon:'fa-wand-magic' },
+    { id:'bin', name:'BIN Lookup', cmd:'/BIN', desc:'Info detallada de BINs', tier:'free', icon:'fa-search' },
+    { id:'ext', name:'Extrapolador', cmd:'/EXT', desc:'Extrapola tarjetas similares', tier:'free', icon:'fa-shuffle' },
+    { id:'addr', name:'Fake Address', cmd:'/ADDR', desc:'Direcciones e identidades', tier:'free', icon:'fa-map-location' },
+    { id:'ip', name:'IP Lookup', cmd:'/IP', desc:'Geolocalizaci\u00f3n de IPs', tier:'free', icon:'fa-globe' },
+    { id:'iban', name:'IBAN Gen', cmd:'/IBAN', desc:'IBANs v\u00e1lidos (DE)', tier:'free', icon:'fa-building-columns' },
+    { id:'sites', name:'Site Hunter', cmd:'/SITES', desc:'Localiza tiendas por pasarela', tier:'diamond', icon:'fa-store' },
+    { id:'scan', name:'Site Scanner', cmd:'/HUNTER', desc:'Escanea pasarelas de un sitio', tier:'diamond', icon:'fa-scanner' },
+    { id:'auto', name:'AutoHunter', cmd:'/AUTOHUNTER', desc:'OSINT multi-pasarela avanzado', tier:'diamond', icon:'fa-robot' },
+    { id:'mail', name:'Temp Mail', cmd:'/TEMPMAIL', desc:'Correo temporal con buz\u00f3n live', tier:'diamond', icon:'fa-envelope' },
+    { id:'curl', name:'cURL \u2192 Python', cmd:'/CURL', desc:'Convierte cURL a aiohttp', tier:'diamond', icon:'fa-code' },
+    { id:'combo', name:'ComboHunter', cmd:'/COMBO', desc:'Validador de combos email:pass', tier:'diamond', icon:'fa-list-check' }
+];
+
+const GATES = [
+    { name:'Stripe Auth', type:'STRIPE', mode:'AUTH', tier:'free', time:'~6-10s', cost:0.3 },
+    { name:'Shopify', type:'SHOPIFY', mode:'AUTH', tier:'free', time:'~10-20s', cost:0.4 },
+    { name:'Shopify $10', type:'SHOPIFY', mode:'CHARGE $10', tier:'platinum', time:'~8-15s', cost:0.4 },
+    { name:'Braintree Auth', type:'BRAINTREE', mode:'AUTH', tier:'platinum', time:'~8-18s', cost:0.5 },
+    { name:'Stripe Auth $0', type:'STRIPE', mode:'AUTH', tier:'platinum', time:'~8-12s', cost:0.3 },
+    { name:'Braintree $14.18', type:'BRAINTREE', mode:'CHARGE $14.18', tier:'diamond', time:'~15-30s/card', cost:0.5 },
+    { name:'Stripe $1.00', type:'STRIPE', mode:'CHARGE $1', tier:'platinum', time:'~15-20s', cost:0.3 },
+    { name:'Stripe $1.00 (2)', type:'STRIPE', mode:'CHARGE $1', tier:'platinum', time:'~15-20s', cost:0.3 },
+    { name:'Custom Shopify Gate', type:'SHOPIFY', mode:'AUTH', tier:'diamond', time:'~10-20s', cost:0.4 },
+    { name:'Custom Braintree Gate', type:'BRAINTREE', mode:'AUTH', tier:'diamond', time:'~10-20s', cost:0.5 },
+    { name:'Custom Stripe Gate', type:'STRIPE', mode:'AUTH', tier:'diamond', time:'~10-20s', cost:0.3 },
+    { name:'Stripe Auth $0 (D1)', type:'STRIPE', mode:'AUTH', tier:'diamond', time:'~10-22s', cost:0.3 },
+    { name:'Stripe Auth $0 (D2)', type:'STRIPE', mode:'AUTH', tier:'diamond', time:'~8-12s', cost:0.3 },
+    { name:'Shopify Plus', type:'SHOPIFY', mode:'AUTH+', tier:'diamond', time:'~12-25s', cost:0.4 },
+    { name:'Stripe 3DS Bypass', type:'STRIPE', mode:'AUTH', tier:'diamond', time:'~15-30s', cost:0.3 },
+    { name:'Braintree 3DS', type:'BRAINTREE', mode:'AUTH', tier:'diamond', time:'~12-25s', cost:0.5 },
+    { name:'Shopify Custom $5', type:'SHOPIFY', mode:'CHARGE $5', tier:'diamond', time:'~10-20s', cost:0.4 },
+    { name:'Stripe $0.50', type:'STRIPE', mode:'CHARGE $0.50', tier:'diamond', time:'~10-18s', cost:0.3 },
+    { name:'Braintree $5', type:'BRAINTREE', mode:'CHARGE $5', tier:'diamond', time:'~12-22s', cost:0.5 },
+    { name:'Stripe Auth High', type:'STRIPE', mode:'AUTH', tier:'diamond', time:'~10-15s', cost:0.3 }
+];
+
+// BINs frescos (fuentes: Telegram + GitHub)
+const FRESH_BINS = [
+    { bin:'559049', bank:'Stripe Test', type:'Debit', scheme:'MC', source:'@binsgrams', status:'live' },
+    { bin:'42322301', bank:'Stripe', type:'Credit', scheme:'Visa', source:'@binsgrams', status:'live' },
+    { bin:'527505', bank:'Multiple (DD,Flights)', type:'Credit', scheme:'MC', source:'@binsgrams', status:'live' },
+    { bin:'546249', bank:'Multiple (Temu,BestBuy)', type:'Credit', scheme:'MC', source:'@binsgrams', status:'live' },
+    { bin:'541052', bank:'Barclays UK', type:'Credit', scheme:'MC', source:'@binsgrams', status:'live' },
+    { bin:'490172', bank:'Banco Itau/Bradesco', type:'Credit', scheme:'Visa', source:'@binsgrams', status:'live' },
+    { bin:'552000', bank:'Citibank Taiwan', type:'Credit', scheme:'MC', source:'@binsgrams', status:'live' },
+    { bin:'456396', bank:'Australian issuers', type:'Debit', scheme:'Visa', source:'@binsgrams', status:'live' },
+    { bin:'406042', bank:'AWS Method', type:'Credit', scheme:'Visa', source:'@binsflix', status:'tested' },
+    { bin:'519535', bank:'Real Card Live', type:'Debit', scheme:'MC', source:'@binsflix', status:'live' },
+    { bin:'45717360', bank:'Jyske Bank', type:'Debit', scheme:'Visa', source:'binlist/verified', status:'verified' },
+    { bin:'400005', bank:'Visa Test', type:'Credit', scheme:'Visa', source:'binlist/verified', status:'verified' },
+    { bin:'555555', bank:'MC Test', type:'Credit', scheme:'MC', source:'binlist/verified', status:'verified' },
+    { bin:'411111', bank:'Multiple Issuers', type:'Debit', scheme:'Visa', source:'binlist/verified', status:'verified' },
+    { bin:'498800', bank:'Standard Chartered', type:'Credit', scheme:'Visa', source:'github/bin-list-data', status:'verified' },
+    { bin:'448123', bank:'HSBC UK', type:'Credit', scheme:'Visa', source:'@daily_bins', status:'live' },
+];
+
+// ====== STATE ======
+const state = {
+    mailAddr: null,
+    mailPass: null,
+    mailToken: null,
+    mailId: null,
+    feedEntries: []
+};
+
+// ====== TOAST ======
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function copyClip(text) {
+    navigator.clipboard.writeText(text).then(()=>toast('\u2713 Copiado')).catch(()=>{
+        const ta = document.createElement('textarea');
+        ta.value=text; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        toast('\u2713 Copiado');
+    });
+}
+
+// ====== FEED ======
+function addFeed(type, title, detail) {
+    const list = document.getElementById('feedList');
+    const empty = list.querySelector('.text-center');
+    if (empty && state.feedEntries.length === 0) list.innerHTML = '';
+    const icons = { new:'fa-bolt', down:'fa-circle-exclamation', info:'fa-circle-info' };
+    const icon = icons[type] || 'fa-circle-info';
+    const div = document.createElement('div');
+    div.className = 'feed-entry';
+    div.innerHTML = `
+        <div class="icon-circle ${type}"><i class="fas ${icon}"></i></div>
+        <div>
+            <div class="feed-text"><strong>${title}</strong> ${detail}</div>
+            <div class="feed-time">${new Date().toLocaleTimeString()}</div>
+        </div>`;
+    list.prepend(div);
+    state.feedEntries.push({ type, title, detail, time: Date.now() });
+    if (state.feedEntries.length > 50) {
+        const items = list.querySelectorAll('.feed-entry');
+        if (items.length > 50) items[items.length-1].remove();
+    }
+}
+
+// ====== BIN CHECKER ======
+document.getElementById('binCheckBtn').addEventListener('click', async () => {
+    const input = document.getElementById('binCheckInput').value.replace(/\D/g,'').slice(0,8);
+    const result = document.getElementById('binCheckResult');
+    if (input.length < 6) { result.innerHTML = '<span style="color:#f7525b;">El BIN debe tener al menos 6 d\u00edgitos</span>'; return; }
+    result.innerHTML = '<span class="loading-spinner"></span> Consultando BIN ' + input + ' contra binlist.net...';
+    try {
+        const resp =
+        <button class="filter-btn"
